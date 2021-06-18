@@ -1,0 +1,14 @@
+search_autocomplete-js:
+  filter: rjsmin
+  output: ckanext-search_autocomplete/%(version)s-search_autocomplete.js
+  contents:
+    - js/search_autocomplete.js
+  extra:
+    preload:
+      - base/main
+
+search_autocomplete-css:
+  filter: cssrewrite
+  output: ckanext-search_autocomplete/%(version)s-search_autocomplete.css
+  contents:
+    - css/search_autocomplete.css

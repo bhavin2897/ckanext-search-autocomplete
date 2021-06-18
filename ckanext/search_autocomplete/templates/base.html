@@ -1,0 +1,11 @@
+{% ckan_extends %}
+
+{% block styles %}
+    {{ super() }}
+    {% asset 'search_autocomplete/search_autocomplete-css' %}
+{% endblock %}
+
+{%- block scripts %}
+    {{ super() }}
+    {% asset 'search_autocomplete/search_autocomplete-js' %}
+{% endblock -%}
