@@ -75,7 +75,6 @@ ckan.module('ckanext-search-autocomplete', function($) {
             this.scheduleRequest();
         },
         _onKeyDown: function(e) {
-            console.log(e);
             switch (e.key) {
                 case 'ArrowDown':
                     this.cycleSuggestions(+1);
@@ -144,7 +143,6 @@ ckan.module('ckanext-search-autocomplete', function($) {
                     'POST',
                     'search_autocomplete', { q: q },
                     function(data) {
-                        console.log(data);
                         self.isPending = false;
                         self.el.removeClass('pending-suggestions');
                         if (self.requestId === null) {
