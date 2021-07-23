@@ -10,7 +10,7 @@ import ckan.plugins as p
 import ckanext.datapusher.interfaces as interfaces
 
 from ckanext.search_autocomplete.interfaces import ISearchAutocomplete
-from ckanext.search_autocomplete.utils import get_categories
+from ckanext.search_autocomplete.utils import get_categories, CONFIG_IGNORE_SYNONYMS
 
 
 def _tags(tags: Iterable[str]) -> list[dict[str, str]]:
@@ -34,7 +34,7 @@ class TestPlugin(p.SingletonPlugin):
         return {"tags": "Tags"}
 
 
-@pytest.mark.usefixtures("with_request_context", "clean_db")
+@pytest.mark.usefixtures("with_request_context", "with_plugins", "clean_db", "clean_index")
 class TestSearchAutocomplete:
     ds_title = "Vegetation of the Mallee Cliffs National Park"
 
@@ -128,3 +128,27 @@ class TestSearchAutocomplete:
 
         assert len(results["categories"]) == 1
         assert results["categories"][0]["type"] == "Tags"
+
+    def test_synonyms_applied_by_default(self):
+        # "gib" is default test synonym, that is available out of the box
+        # and expanded to "gigabyte"
+        factories.Dataset(title="gib")
+        result = call_action("search_autocomplete", q="gigabyte")
+        assert len(result["datasets"]) == 1
+        full = result["datasets"][0]
+
+        result = call_action("search_autocomplete", q="gib")
+        assert len(result["datasets"]) == 1
+        short = result["datasets"][0]
+        assert short == full
+
+    @pytest.mark.ckan_config(CONFIG_IGNORE_SYNONYMS, "yes")
+    def test_synonyms_ignored(self):
+        # "gib" is default test synonym, that is available out of the box
+        # and expanded to "gigabyte"
+        factories.Dataset(title="gib")
+        result = call_action("search_autocomplete", q="gigabyte")
+        assert len(result["datasets"]) == 0
+
+        result = call_action("search_autocomplete", q="gib")
+        assert len(result["datasets"]) == 1

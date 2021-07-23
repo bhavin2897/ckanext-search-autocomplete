@@ -2,6 +2,7 @@ import itertools
 import logging
 
 from typing import List, Any, Tuple, Dict
+from typing_extensions import TypedDict
 
 import ckan.plugins.toolkit as tk
 import ckan.plugins as p
@@ -10,9 +11,19 @@ from ckan.lib.search.query import solr_literal
 from ckanext.search_autocomplete.interfaces import ISearchAutocomplete
 
 CONFIG_AUTOCOMPLETE_LIMIT = "ckanext.search_autocomplete.autocomplete_limit"
+CONFIG_IGNORE_SYNONYMS = "ckanext.search_autocomplete.ignore_synonyms"
+
 DEFAULT_AUTOCOMPLETE_LIMIT = 6
+DEFAULT_IGNORE_SYNONYMS = False
 
 log = logging.getLogger(__name__)
+
+
+class Suggestion(TypedDict):
+    href: str
+    label: str
+    type: str
+    count: int
 
 
 def _get_autocomplete_limit():
@@ -21,7 +32,7 @@ def _get_autocomplete_limit():
     )
 
 
-def _autocomplete_datasets(terms):
+def autocomplete_datasets(terms: List[str]) -> List[Suggestion]:
     """Return limited number of autocomplete suggestions."""
     combined, *others = _datasets_by_terms(terms, include_combined=True)
 
@@ -38,11 +49,12 @@ def _autocomplete_datasets(terms):
     ]
 
     return [
-        {
-            "href": tk.h.url_for("dataset.read", id=item["name"]),
-            "label": item["title"],
-            "type": "Dataset",
-        }
+        Suggestion(
+            href=tk.h.url_for("dataset.read", id=item["name"]),
+            label=item["title"],
+            type="Dataset",
+            count=1,
+        )
         for item in combined
         + other[: _get_autocomplete_limit() - len(combined)]
     ]
@@ -66,6 +78,12 @@ def _datasets_by_terms(
 
         terms = [" ".join(terms)] + terms
 
+    ignore_synonyms = tk.asbool(tk.config.get(CONFIG_IGNORE_SYNONYMS, DEFAULT_IGNORE_SYNONYMS))
+    if ignore_synonyms:
+        fq = "title_ngram:({0})"
+    else:
+        fq = "title:({0}) OR title_ngram:({0})"
+
     return [
         tk.get_action("package_search")(
             {},
@@ -73,14 +91,14 @@ def _datasets_by_terms(
                 "include_private": True,
                 "rows": limit,
                 "fl": "name,title",
-                "fq": "title:({0}) OR title_ngram:({0})".format(term),
+                "fq": fq.format(term),
             },
         )["results"]
         for term in terms
     ]
 
 
-def _autocomplete_categories(terms):
+def autocomplete_categories(terms: List[str]) -> List[Suggestion]:
     facets = tk.get_action("package_search")(
         {},
         {
@@ -105,14 +123,14 @@ def _autocomplete_categories(terms):
             group.append(
                 (
                     matches,
-                    {
-                        "href": tk.h.url_for(
+                    Suggestion(
+                        href=tk.h.url_for(
                             "dataset.search", **{facet["title"]: item["name"]}
                         ),
-                        "label": item["display_name"],
-                        "type": get_categories()[facet["title"]],
-                        "count": item["count"],
-                    },
+                        label=item["display_name"],
+                        type=get_categories()[facet["title"]],
+                        count=item["count"],
+                    ),
                 )
             )
         categories.append(
