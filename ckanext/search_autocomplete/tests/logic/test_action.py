@@ -21,19 +21,17 @@ class TestPlugin(p.SingletonPlugin):
     p.implements(ISearchAutocomplete)
 
     def get_categories(self):
-        '''
+        """
         Allows to redefine the default autocompletable categories
 
-        Default: 
+        Default:
         _facet_type_to_label = {
             'organization': 'Organisations',
             'tags': 'Tags',
             'res_format': 'Formats',
         }
-        '''
-        return {
-            'tags': 'Tags'
-        }
+        """
+        return {"tags": "Tags"}
 
 
 @pytest.mark.usefixtures("with_request_context", "clean_db")
@@ -94,13 +92,17 @@ class TestSearchAutocomplete:
     def test_default_categories(self):
         group = factories.Organization(title="EXAMPLE")
         dataset = factories.Dataset(
-            tags=_tags(["EXAMPLE",]),
-            owner_org=group["id"]
+            tags=_tags(
+                [
+                    "EXAMPLE",
+                ]
+            ),
+            owner_org=group["id"],
         )
         factories.Resource(package_id=dataset["id"], format="EXAMPLE")
 
         results = call_action("search_autocomplete", q="EXAMPLE")
-        
+
         assert len(results["categories"]) == len(get_categories())
 
     def test_deleted_dataset(self):
@@ -108,16 +110,20 @@ class TestSearchAutocomplete:
         results = call_action("search_autocomplete", q="Park")
 
         assert not results["categories"]
-    
+
     @pytest.mark.ckan_config("ckan.plugins", "search_autocomplete test_plugin")
     def test_custom_categories(self):
         group = factories.Organization(title="EXAMPLE")
         dataset = factories.Dataset(
-            tags=_tags(["EXAMPLE",]),
-            owner_org=group["id"]
+            tags=_tags(
+                [
+                    "EXAMPLE",
+                ]
+            ),
+            owner_org=group["id"],
         )
         factories.Resource(package_id=dataset["id"], format="EXAMPLE")
-        
+
         results = call_action("search_autocomplete", q="EXAMPLE")
 
         assert len(results["categories"]) == 1
