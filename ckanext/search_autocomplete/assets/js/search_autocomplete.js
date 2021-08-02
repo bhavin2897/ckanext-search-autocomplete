@@ -41,7 +41,7 @@ ckan.module('ckanext-search-autocomplete', function($) {
             suggestionBox: null,
         },
         setup: function() {
-            this.input = $(this.options.autocompleteInput);
+            this.input = this.$(this.options.autocompleteInput);
             if (!this.input.length) {
                 console.error(
                     '[search-autocomplete] input does not exist: %s',
@@ -49,7 +49,7 @@ ckan.module('ckanext-search-autocomplete', function($) {
                 );
             }
 
-            this.suggestionBox = $(this.options.suggestionBox);
+            this.suggestionBox = this.$(this.options.suggestionBox);
             if (!this.suggestionBox.length) {
                 console.error(
                     '[search-autocomplete] suggestion box does not exist: %s',
