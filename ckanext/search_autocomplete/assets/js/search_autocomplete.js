@@ -67,7 +67,7 @@ ckan.module('ckanext-search-autocomplete', function ($) {
             });
         },
         _onKeyUp: function (e) {
-            if (~e.key.indexOf('Arrow')) {
+            if (~e.key.indexOf('Arrow') || e.key === 'Escape') {
                 return;
             }
             this.cleanSchedule();
@@ -89,6 +89,10 @@ ckan.module('ckanext-search-autocomplete', function ($) {
                         e.preventDefault();
                         this.pickActive();
                     }
+                    break;
+                case 'Escape':
+                    this.cleanSchedule();
+                    this.dropSuggestionList();
                     break;
                 default:
                     return;
