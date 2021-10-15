@@ -73,7 +73,7 @@
     transform-origin: 50%;
 }
 
-.pending-request .fa {
+.pending-request .fa-spinner {
     animation: rotate 1s infinite linear;
 }
 
