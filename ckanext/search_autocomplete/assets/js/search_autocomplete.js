@@ -101,6 +101,11 @@ ckan.module('ckanext-search-autocomplete', function ($) {
         _onBlur: function () {
             var self = this;
             this.cleanSchedule();
+            // wait a bit if user wants to click on a link from the
+            // suggestion box
+            setTimeout(function () {
+                self.dropSuggestionList();
+            }, 600);
         },
         cycleSuggestions: function (step) {
             this.setActive(this.activePosition + step);
