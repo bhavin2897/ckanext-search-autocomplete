@@ -12,9 +12,11 @@ from ckanext.search_autocomplete.interfaces import ISearchAutocomplete
 
 CONFIG_AUTOCOMPLETE_LIMIT = "ckanext.search_autocomplete.autocomplete_limit"
 CONFIG_IGNORE_SYNONYMS = "ckanext.search_autocomplete.ignore_synonyms"
+CONFIG_INCLUDE_HARVEST_PORTAL = "ckanext.search_autocomplete.include_harvest_portal"
 
 DEFAULT_AUTOCOMPLETE_LIMIT = 6
 DEFAULT_IGNORE_SYNONYMS = False
+DEFAULT_INCLUDE_HARVEST_PORTAL = True
 
 log = logging.getLogger(__name__)
 
@@ -48,16 +50,20 @@ def autocomplete_datasets(terms: List[str]) -> List[Suggestion]:
         if item not in combined
     ]
 
-    return [
-        Suggestion(
-            href=tk.h.url_for("dataset.read", id=item["name"]),
+    include_harvest = tk.asbool(tk.config.get(CONFIG_INCLUDE_HARVEST_PORTAL, DEFAULT_INCLUDE_HARVEST_PORTAL))
+    results = []
+    for item in combined + other[: _get_autocomplete_limit() - len(combined)]:
+        harvested = tk.h.get_pkg_dict_extra(item, "harvest_portal")
+        if not include_harvest and harvested is not None:
+            continue
+        results.append(Suggestion(
+            href=tk.h.url_for("dataset.read", id=item["name"]) if harvested is None else
+                tk.h.get_pkg_dict_extra(item, "harvest_url"),
             label=item["title"],
             type="Dataset",
             count=1,
-        )
-        for item in combined
-        + other[: _get_autocomplete_limit() - len(combined)]
-    ]
+        ))
+    return results
 
 
 def _datasets_by_terms(

@@ -1,4 +1,4 @@
-ckan.module('ckanext-search-autocomplete', function($) {
+ckan.module('ckanext-search-autocomplete', function ($) {
     'use strict';
 
     function follow(suggestion) {
@@ -6,7 +6,7 @@ ckan.module('ckanext-search-autocomplete', function($) {
     }
 
     function formatLabel(type, q, item) {
-        var text = $('<span>', { html: item.label }).text();
+        var text = $('<span>', {html: item.label}).text();
         switch (type) {
             case 'datasets':
                 return $('<span>', {
@@ -20,8 +20,8 @@ ckan.module('ckanext-search-autocomplete', function($) {
                 });
                 break;
             case 'categories':
-                return $('<span>', { text: text }).append(
-                    $('<span>', { text: '(' + item.type + ')' }).addClass('muted')
+                return $('<span>', {text: text}).append(
+                    $('<span>', {text: '(' + item.type + ')'}).addClass('muted')
                 );
                 break;
             default:
@@ -40,7 +40,7 @@ ckan.module('ckanext-search-autocomplete', function($) {
             autocompleteInput: null,
             suggestionBox: null,
         },
-        setup: function() {
+        setup: function () {
             this.input = this.$(this.options.autocompleteInput);
             if (!this.input.length) {
                 console.error(
@@ -57,7 +57,7 @@ ckan.module('ckanext-search-autocomplete', function($) {
                 );
             }
         },
-        initialize: function() {
+        initialize: function () {
             this.setup();
             $.proxyAll(this, /_on/);
             this.input.on({
@@ -66,15 +66,15 @@ ckan.module('ckanext-search-autocomplete', function($) {
                 blur: this._onBlur,
             });
         },
-        _onKeyUp: function(e) {
-            if (~e.key.indexOf('Arrow')) {
+        _onKeyUp: function (e) {
+            if (~e.key.indexOf('Arrow') || e.key === 'Escape') {
                 return;
             }
             this.cleanSchedule();
             this.queries.push(e.target.value);
             this.scheduleRequest();
         },
-        _onKeyDown: function(e) {
+        _onKeyDown: function (e) {
             switch (e.key) {
                 case 'ArrowDown':
                     this.cycleSuggestions(+1);
@@ -90,23 +90,27 @@ ckan.module('ckanext-search-autocomplete', function($) {
                         this.pickActive();
                     }
                     break;
+                case 'Escape':
+                    this.cleanSchedule();
+                    this.dropSuggestionList();
+                    break;
                 default:
                     return;
             }
         },
-        _onBlur: function() {
+        _onBlur: function () {
             var self = this;
             this.cleanSchedule();
             // wait a bit if user wants to click on a link from the
             // suggestion box
-            setTimeout(function() {
+            setTimeout(function () {
                 self.dropSuggestionList();
             }, 600);
         },
-        cycleSuggestions: function(step) {
+        cycleSuggestions: function (step) {
             this.setActive(this.activePosition + step);
         },
-        pickActive: function() {
+        pickActive: function () {
             var idx = this.activePosition - 1;
             var suggestion = this.suggestions[idx];
             if (!suggestion) {
@@ -115,7 +119,7 @@ ckan.module('ckanext-search-autocomplete', function($) {
             }
             follow(suggestion);
         },
-        setActive: function(idx) {
+        setActive: function (idx) {
             var cap = this.suggestions.length + 1;
             this.activePosition = idx === 0 ? 0 : ((idx % cap) + cap) % cap;
             this.suggestionBox.find('.selected').removeClass('selected');
@@ -126,23 +130,23 @@ ckan.module('ckanext-search-autocomplete', function($) {
                     .addClass('selected');
             }
         },
-        cleanSchedule: function() {
+        cleanSchedule: function () {
             clearTimeout(this.requestId);
             this.requestId = null;
         },
-        scheduleRequest: function() {
+        scheduleRequest: function () {
             if (this.isPending || !this.queries.length) {
                 return;
             }
             var self = this;
-            this.requestId = setTimeout(function() {
+            this.requestId = setTimeout(function () {
                 self.isPending = true;
                 self.el.addClass('pending-suggestions');
                 var q = self.queries.splice(0).pop();
                 self.sandbox.client.call(
                     'POST',
-                    'search_autocomplete', { q: q },
-                    function(data) {
+                    'search_autocomplete', {q: q},
+                    function (data) {
                         self.isPending = false;
                         self.el.removeClass('pending-suggestions');
                         if (self.requestId === null) {
@@ -151,7 +155,7 @@ ckan.module('ckanext-search-autocomplete', function($) {
                         self.buildSuggestionList(data.result, q);
                         self.scheduleRequest();
                     },
-                    function(err) {
+                    function (err) {
                         self.isPending = false;
                         self.el.removeClass('pending-suggestions');
                         console.error(err);
@@ -160,7 +164,7 @@ ckan.module('ckanext-search-autocomplete', function($) {
                 );
             }, this.options.delay);
         },
-        buildSuggestionList: function(data, q) {
+        buildSuggestionList: function (data, q) {
             this.setActive(0);
             this.suggestions = [].concat(data.datasets).concat(data.categories);
             if (this.suggestions.length) {
@@ -175,15 +179,15 @@ ckan.module('ckanext-search-autocomplete', function($) {
                     .children()
                     .remove()
                     .prevObject.append(
-                        data[key].map(function(item) {
+                        data[key].map(function (item) {
                             return $('<li>').append(
-                                $('<a>', { html: formatLabel(key, q, item), href: item.href })
+                                $('<a>', {html: formatLabel(key, q, item), href: item.href})
                             );
                         })
                     );
             }
         },
-        dropSuggestionList: function() {
+        dropSuggestionList: function () {
             this.setActive(0);
             this.suggestions = [];
             this.suggestionBox.find('.suggestions').children().remove();
