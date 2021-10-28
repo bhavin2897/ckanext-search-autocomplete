@@ -145,7 +145,7 @@ ckan.module('ckanext-search-autocomplete', function ($) {
                 var q = self.queries.splice(0).pop();
                 self.sandbox.client.call(
                     'POST',
-                    'search_autocomplete', {q: q},
+                    'search_autocomplete', {q: q, fq: self.options.fq},
                     function (data) {
                         self.isPending = false;
                         self.el.removeClass('pending-suggestions');

@@ -1,7 +1,7 @@
 import itertools
 import logging
 
-from typing import List, Any, Tuple, Dict
+from typing import List, Any, Optional, Tuple, Dict
 from typing_extensions import TypedDict
 
 import ckan.plugins.toolkit as tk
@@ -34,9 +34,9 @@ def _get_autocomplete_limit():
     )
 
 
-def autocomplete_datasets(terms: List[str]) -> List[Suggestion]:
+def autocomplete_datasets(terms: List[str], fq: Optional[str]) -> List[Suggestion]:
     """Return limited number of autocomplete suggestions."""
-    combined, *others = _datasets_by_terms(terms, include_combined=True)
+    combined, *others = _datasets_by_terms(terms, fq, include_combined=True)
 
     # Combine and dedup all the results
     other: List[Dict[str, str]] = [
@@ -68,8 +68,10 @@ def autocomplete_datasets(terms: List[str]) -> List[Suggestion]:
 
 def _datasets_by_terms(
     terms: List[str],
+    fq: Optional[str],
     include_combined: bool = False,
     limit: int = _get_autocomplete_limit(),
+
 ) -> List[List[Dict[str, str]]]:
     """Get list of search result iterables.
 
@@ -85,10 +87,12 @@ def _datasets_by_terms(
         terms = [" ".join(terms)] + terms
 
     ignore_synonyms = tk.asbool(tk.config.get(CONFIG_IGNORE_SYNONYMS, DEFAULT_IGNORE_SYNONYMS))
+
+    fq = fq or ""
     if ignore_synonyms:
-        fq = "title_ngram:({0})"
+        fq += " title_ngram:({0})"
     else:
-        fq = "title:({0}) OR title_ngram:({0})"
+        fq += " title:({0}) OR title_ngram:({0})"
 
     return [
         tk.get_action("package_search")(
@@ -104,12 +108,13 @@ def _datasets_by_terms(
     ]
 
 
-def autocomplete_categories(terms: List[str]) -> List[Suggestion]:
+def autocomplete_categories(terms: List[str], fq: Optional[str]) -> List[Suggestion]:
     facets = tk.get_action("package_search")(
         {},
         {
             "rows": 0,
             "facet.field": list(get_categories().keys()),
+            "fq": fq,
         },
     )["search_facets"]
 
