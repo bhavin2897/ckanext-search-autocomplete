@@ -18,6 +18,8 @@ class AutocompleteDict(TypedDict):
 @tk.side_effect_free
 def search_autocomplete(context, data_dict) -> AutocompleteDict:
     q = tk.get_or_bust(data_dict, "q")
+    fq = data_dict.get("fq")
+
     words = q.lower().split()
 
     if not words:
@@ -28,8 +30,8 @@ def search_autocomplete(context, data_dict) -> AutocompleteDict:
 
     # use only first two words. Otherwise we'll mess with
     # distributions of relevant suggestions per word
-    datasets = autocomplete_datasets(words)
-    categories = autocomplete_categories(words)
+    datasets = autocomplete_datasets(words, fq)
+    categories = autocomplete_categories(words, fq)
 
     return {
         "datasets": datasets,
