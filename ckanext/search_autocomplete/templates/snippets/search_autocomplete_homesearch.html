@@ -5,7 +5,7 @@
     <h3 class="heading">{{ _("Search dataset") }}</h3>
 {% block search_input %}
 
-    <div class="search-autocomplete-wrapper"
+    <div class="search-input form-group search-giant search-autocomplete-wrapper"
              data-module="ckanext-search-autocomplete"
              data-module-suggestion-box="#search-autocomplete--suggestion-box"
              data-module-autocomplete-input="#field-giant-search" >
@@ -24,11 +24,11 @@
                 </li>
             {% endfor %}
         </ul>
-      <span class="input-group-btn">
-        <button class="btn btn-default btn-lg" type="submit" value="search" aria-label="{{_('Submit')}}" hidden="true">
+        <button class="search-input form-group search-giant" type="submit" aria-labelledby="search-label">
           <i class="fa fa-search"></i>
+            <span class="sr-only" id="search-label">{{ _('Search') }}</span>
         </button>
-      </span>
+
       {% endblock %}
     </div>
      </form>
@@ -39,3 +39,4 @@
       <a class="tag" href="{% url_for 'dataset.search', tags=tag.name %}">{{ h.truncate(tag.display_name, 22) }}</a>
     {% endfor %}
   </div>
+</div>
