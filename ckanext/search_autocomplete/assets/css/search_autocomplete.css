@@ -47,7 +47,9 @@
     text-decoration: unset;
 }
 
-.suggestion-box .suggestion-section .suggestions li a.selected {
+.suggestion-box .suggestion-section .suggestions li a.selected
+    color: #fff;
+    background: #664AFF;
     text-decoration: underline;
 }
 
