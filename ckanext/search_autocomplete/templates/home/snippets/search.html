@@ -1,50 +1,47 @@
-{# {% if h.search_autocomplete_enable_default_implementation() %} #}
+{% if h.search_autocomplete_enable_default_implementation() %}
 {% set tags = h.get_facet_items_dict('tags', c.search_facets, limit=3) %}
 {% set placeholder = _('E.g. 1h-nmr') %}
-        <div class="search-autocomplete-wrapper"
+ <form class="module-content search-form" method="get" action="{% url_for 'dataset.search' %}">
+{% block search_input %}
+
+    <div class="search-autocomplete-wrapper"
              data-module="ckanext-search-autocomplete"
              data-module-suggestion-box="#search-autocomplete--suggestion-box"
              data-module-autocomplete-input="#field-giant-search" >
-            {{ super() }}
-        </div>
+      <input aria-label="{% block header_site_search_label %}{{ placeholder }}{% endblock %}" id="field-giant-search" type="text" class="form-control input-lg" name="q" value="{{ query }}" autocomplete="off" placeholder="{{ placeholder }}">
+      {% block search_input_button %}
+        <ul id="search-autocomplete--suggestion-box" class="suggestion-box">
+            {% set suggestion_groups = [
+                ('datasets', 'Relevant datasets'),
+                ('categories','Browse filters')
+            ]
+            %}
 
-<div class="search-autocomplete-wrapper"
-             data-module="ckanext-search-autocomplete"
-             data-module-suggestion-box="#search-autocomplete--suggestion-box"
-             data-module-autocomplete-input="#field-giant-search">
-  <form class="module-content search-form" method="get" action="{% url_for 'dataset.search' %}">
-    <h3 class="heading">{{ _("Search dataset") }}</h3>
-    <div class="search-input form-group search-giant">
-      <input aria-label="{% block header_site_search_label %}{{ _('Search datasets') }}{% endblock %}" id="field-main-search" type="text" class="form-control" name="q" value="" autocomplete="off" placeholder="{% block search_placeholder %}{{ placeholder }}{% endblock %}" />
-      <button type="submit" aria-labelledby="search-label">
-        <i class="fa fa-search"></i>
-            {% if h.search_autocomplete_enable_default_implementation() %}
-                <ul id="search-autocomplete--suggestion-box" class="suggestion-box">
-                {% set suggestion_groups = [
-                    ('datasets', 'Relevant datasets'),
-                    ('categories','Browse filters')
-                    ]
-                    %}
-
-                {% for section, label in suggestion_groups %}
-                    <li data-section="{{ section }}" class="suggestion-section">
-                        <ul class="suggestions" data-label="{{ _(label) }}"></ul>
-                    </li>
+            {% for section, label in suggestion_groups %}
+                <li data-section="{{ section }}" class="suggestion-section">
+                    <ul class="suggestions" data-label="{{ _(label) }}"></ul>
+                </li>
             {% endfor %}
-                </ul>
-            {% endif %}
-        <span class="sr-only" id="search-label">{{ _('Search') }}</span>
-      </button>
+        </ul>
+      <span class="input-group-btn">
+        <button class="btn btn-default btn-lg" type="submit" value="search" aria-label="{{_('Submit')}}">
+          <i class="fa fa-search"></i>
+        </button>
+      </span>
+      {% endblock %}
     </div>
-  </form>
+     </form>
+  {% endblock %}
   <div class="tags">
     <h3>{{ _('Popular tags') }}</h3>
     {% for tag in tags %}
       <a class="tag" href="{% url_for 'dataset.search', tags=tag.name %}">{{ h.truncate(tag.display_name, 22) }}</a>
     {% endfor %}
   </div>
-</div>
 
+{%  else %}
+{% ckan_extends %}
+{% endif %}
 
 
 
