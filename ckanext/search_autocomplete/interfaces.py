@@ -7,12 +7,12 @@ class ISearchAutocomplete(Interface):
         """
         Allows to redefine the default autocompletable categories
 
-        Default:"""
+        Default:
         categories = {
             'organization': _('Repositories'),
             'tags': ('Tags'),
             'res_format': _('Formats'),
         }
 
-
-        return categories
+        """
+        return {}
