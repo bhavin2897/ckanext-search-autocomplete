@@ -46,11 +46,15 @@
     color: #000;
     text-decoration: unset;
 }
+.suggestion-box .suggestion-section .suggestions li:hover{
+    color: #fff;
+    background: #a6a6a6;
+}
 
 .suggestion-box .suggestion-section .suggestions li a.selected
     color: #fff;
-    background: #664AFF;
-    text-decoration: underline;
+    background: #808080;
+
 }
 
 .suggestion-box .suggestion-section .suggestions li:first-child {
