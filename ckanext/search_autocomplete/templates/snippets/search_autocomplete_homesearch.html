@@ -1,10 +1,8 @@
-{% ckan_extends %}
-
-{% if h.search_autocomplete_enable_default_implementation() %}
-
 {% set tags = h.get_facet_items_dict('tags', c.search_facets, limit=3) %}
 {% set placeholder = _('E.g. 1h-nmr') %}
- <form class="module-content search-form" method="get" action="{% url_for 'dataset.search' %}">
+<div class="module module-search module-narrow module-shallow box">
+  <form class="module-content search-form" method="get" action="{% url_for 'dataset.search' %}">
+    <h3 class="heading">{{ _("Search dataset") }}</h3>
 {% block search_input %}
 
     <div class="search-autocomplete-wrapper"
@@ -27,7 +25,7 @@
             {% endfor %}
         </ul>
       <span class="input-group-btn">
-        <button class="btn btn-default btn-lg" type="submit" value="search" aria-label="{{_('Submit')}}">
+        <button class="btn btn-default btn-lg" type="submit" value="search" aria-label="{{_('Submit')}}" hidden="true">
           <i class="fa fa-search"></i>
         </button>
       </span>
@@ -41,11 +39,3 @@
       <a class="tag" href="{% url_for 'dataset.search', tags=tag.name %}">{{ h.truncate(tag.display_name, 22) }}</a>
     {% endfor %}
   </div>
-
-{% endif %}
-
-
-
-
-
-
