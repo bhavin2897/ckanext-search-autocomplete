@@ -13,7 +13,7 @@
     border: 2px solid #c3c3c3;
     border-radius: 6px;
     margin: 0 15px;
-    display: inline-block;
+    display: none;
 }
 
 .suggestion-box .suggestion-section .suggestions {
