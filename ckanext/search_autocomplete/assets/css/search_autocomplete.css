@@ -48,7 +48,7 @@
 }
 .suggestion-box .suggestion-section .suggestions li:hover{
     color: #fff;
-    background: #a6a6a6;
+    background: #cccccc;
 }
 
 .suggestion-box .suggestion-section .suggestions li a.selected
