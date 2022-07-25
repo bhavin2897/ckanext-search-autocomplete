@@ -11,7 +11,8 @@
              data-module="ckanext-search-autocomplete"
              data-module-suggestion-box="#search-autocomplete--suggestion-box"
              data-module-autocomplete-input="#field-giant-search" >
-      <input aria-label="{% block header_site_search_label %}{{ placeholder }}{% endblock %}" id="field-giant-search" type="text" class="form-control input-lg" name="q" value="{{ query }}" autocomplete="off" placeholder="{{ placeholder }}">
+      <input aria-label="{% block header_site_search_label %}{{ placeholder }}{% endblock %}"
+             id="field-giant-search" type="text" class="form-control input-lg" name="q" value="{{ query }}" autocomplete="on" placeholder="{{ placeholder }}">
       {% block search_input_button %}
         <ul id="search-autocomplete--suggestion-box" class="suggestion-box">
             {% set suggestion_groups = [
@@ -19,7 +20,6 @@
                 ('categories','Browse filters')
             ]
             %}
-
             {% for section, label in suggestion_groups %}
                 <li data-section="{{ section }}" class="suggestion-section">
                     <ul class="suggestions" data-label="{{ _(label) }}"></ul>
