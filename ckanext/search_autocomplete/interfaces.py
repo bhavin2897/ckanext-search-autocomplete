@@ -9,7 +9,7 @@ class ISearchAutocomplete(Interface):
 
         Default:
         categories = {
-            'organization': _('Organisations'),
+            'organization': _('Repositories'),
             'tags': ('Tags'),
             'res_format': _('Formats'),
         }
