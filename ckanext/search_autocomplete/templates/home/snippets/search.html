@@ -1,5 +1,6 @@
 {% ckan_extends %}
 
+{% block header_site_search_label %}
 {% if h.search_autocomplete_enable_default_implementation() %}
         <div class="search-autocomplete-wrapper"
              data-module="ckanext-search-autocomplete"
@@ -10,6 +11,7 @@
     {% else %}
         {{ super() }}
     {% endif %}
+
 
 {% if h.search_autocomplete_enable_default_implementation() %}
         <ul id="search-autocomplete--suggestion-box" class="suggestion-box">
@@ -26,4 +28,5 @@
             {% endfor %}
         </ul>
     {% endif %}
-    {{ super() }}
+
+{% endblock %}
