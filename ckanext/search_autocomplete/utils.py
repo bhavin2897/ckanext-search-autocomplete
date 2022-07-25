@@ -172,7 +172,7 @@ def get_categories():
         break
     else:
         categories = {
-            "organization": tk._("Organisations"),
+            "organization": tk._("Repository"),
             "tags": tk._("Tags"),
             "res_format": tk._("Formats"),
         }
