@@ -22,7 +22,6 @@
     font-size: 14px;
     font-weight: normal;
     line-height: 19px;
-    line-height: 19px;
     list-style: none;
 }
 
@@ -31,7 +30,7 @@
 }
 
 .suggestion-box .suggestion-section .suggestions:before {
-    display: flex;
+    display: block;
     color: #009CBC;
     content: attr(data-label);
     font-size: 16px;
@@ -79,11 +78,11 @@
 }
 
 .active-suggestions .suggestion-box {
-    display: flex;
+    display: block;
 }
 
 .pending-suggestions .pending-request {
-    display: flex;
+    display: block;
 }
 
 @keyframes rotate {
