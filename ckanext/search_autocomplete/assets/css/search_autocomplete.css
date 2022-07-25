@@ -21,7 +21,7 @@
     margin: 20px 24px;
     font-size: 14px;
     font-weight: normal;
-    line-height: 19px;
+    line-height: 33px;
     list-style: none;
 }
 
@@ -35,7 +35,7 @@
     content: attr(data-label);
     font-size: 16px;
     font-weight: 700;
-    line-height: 22px;
+    line-height: 36px;
 }
 
 .suggestion-box .suggestion-section .suggestions li {
