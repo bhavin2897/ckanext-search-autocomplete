@@ -100,7 +100,7 @@ def _datasets_by_terms(
             {
                 "include_private": True,
                 "rows": limit,
-                "fl": "name,title,extra['inchi']",
+                "fl": "name,title,inchi",
                 "fq": fq.format(term),
             },
         )["results"]
@@ -175,7 +175,6 @@ def get_categories():
             "organization": tk._("Repository"),
             "tags": tk._("Tags"),
             "res_format": tk._("Formats"),
-            "inchi":tk._("InChI")
         }
 
     return categories
