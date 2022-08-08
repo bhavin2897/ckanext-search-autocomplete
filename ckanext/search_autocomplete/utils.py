@@ -100,7 +100,7 @@ def _datasets_by_terms(
             {
                 "include_private": True,
                 "rows": limit,
-                "fl": "name,title",
+                "fl": "name,title,inchi",
                 "fq": fq.format(term),
             },
         )["results"]
