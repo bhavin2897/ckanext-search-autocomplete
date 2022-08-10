@@ -1,7 +1,6 @@
 
 {% ckan_extends %}
 
-{% snippet advanced_search/advanced_search_search_form.html %}
 
 {% block search_input %}
     {% if h.search_autocomplete_enable_default_implementation() %}
@@ -35,3 +34,6 @@
     {% endif %}
     {{ super() }}
 {% endblock search_input_button %}
+
+{% snippet advanced_search/advanced_search_search_form.html %}
+
