@@ -5,13 +5,16 @@ from .logic.action import get_actions
 from .helpers import get_helpers
 
 
+
+
 class SearchAutocompletePlugin(plugins.SingletonPlugin):
     plugins.implements(plugins.IConfigurer)
     plugins.implements(plugins.IActions)
     plugins.implements(plugins.ITemplateHelpers)
 
-    # ITemplateHelpers
 
+
+    # ITemplateHelpers
     def get_helpers(self):
         return get_helpers()
 
