@@ -1,17 +1,19 @@
-
 {% ckan_extends %}
 
 {% block search_input %}
-    {% if h.search_autocomplete_enable_default_implementation() %}
-        <div class="search-autocomplete-wrapper"
-             data-module="ckanext-search-autocomplete"
-             data-module-suggestion-box="#search-autocomplete--suggestion-box"
-             data-module-autocomplete-input="#field-giant-search" >
-            {% snippet 'advanced_search/advanced_search_search_form.html' %}
-            {{ super() }}
-        </div>
-    {% else %}
+    {% if form_id == 'organization-search-form' %}
         {{ super() }}
+    {% else %}
+        {% if h.search_autocomplete_enable_default_implementation() %}
+            <div class="search-autocomplete-wrapper"
+                 data-module="ckanext-search-autocomplete"
+                 data-module-suggestion-box="#search-autocomplete--suggestion-box"
+                 data-module-autocomplete-input="#field-giant-search" >
+                 {% snippet 'advanced_search/advanced_search_search_form.html' %}
+            </div>
+        {% else %}
+            {{ super() }}
+        {% endif %}
     {% endif %}
 
 {% endblock search_input %}
