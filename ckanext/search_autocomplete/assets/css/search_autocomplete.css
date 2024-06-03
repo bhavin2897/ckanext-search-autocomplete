@@ -51,10 +51,9 @@
     background: #cccccc;
 }
 
-.suggestion-box .suggestion-section .suggestions li a.selected
+.suggestion-box .suggestion-section .suggestions li a.selected {
     color: #fff;
     background: #808080;
-
 }
 
 .suggestion-box .suggestion-section .suggestions li:first-child {
