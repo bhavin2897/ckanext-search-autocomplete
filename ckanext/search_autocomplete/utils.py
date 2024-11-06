@@ -173,8 +173,7 @@ def get_categories():
     else:
         categories = {
             "organization": tk._("Repository"),
-            "tags": tk._("Tags"),
-            "res_format": tk._("Formats"),
+            "measurement_technique": tk._("Measurement Technique"),
+            #"res_format": tk._("Formats"),
         }
-
     return categories
