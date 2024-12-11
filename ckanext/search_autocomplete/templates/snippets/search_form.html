@@ -2,21 +2,36 @@
 
 
 {% block search_input %}
+
+
     {% if form_id == 'organization-search-form' %}
         {{ super() }}
     {% else %}
-          {% snippet 'advanced_search/advanced_search_search_form.html' %}
+          {% snippet 'advanced_search/advanced_search_search_form.html', type = type %}
     {% endif %}
 {% endblock search_input %}
 
 {% block search_input_button %}
+
     {% if h.search_autocomplete_enable_default_implementation() %}
         <ul id="search-autocomplete--suggestion-box" class="suggestion-box">
-            {% set suggestion_groups = [
+            {% if type == 'molecule' %}
+             {% set suggestion_groups = [
+                ('molecule', 'Relevant molecule'),
+                ('categories','Browse filters')
+            ]
+            %}
+
+
+            {% else %}
+
+               {% set suggestion_groups = [
                 ('datasets', 'Relevant datasets'),
                 ('categories','Browse filters')
             ]
             %}
+
+            {% endif %}
 
             {% for section, label in suggestion_groups %}
                 <li data-section="{{ section }}" class="suggestion-section">
@@ -26,6 +41,7 @@
         </ul>
     {% endif %}
     {{ super() }}
+
 {% endblock search_input_button %}
 
 
