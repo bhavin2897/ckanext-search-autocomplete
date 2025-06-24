@@ -6,7 +6,7 @@ import ckan.plugins.toolkit as tk
 CONFIG_ENABLE_DEFAULT_IMPLEMENTATION = "ckanext.search_autocomplete.enable_default_implementation"
 CONFIG_SEARCH_ENDPOINT = "ckanext.search_autocomplete.dataset_search_endpoints"
 
-DEFAULT_ENABLE_DEFAULT_IMPLEMENTATION = False
+DEFAULT_ENABLE_DEFAULT_IMPLEMENTATION = True
 DEFAULT_SEARCH_ENDPOINT = "dataset.search group.read organization.read"
 
 def get_helpers():
