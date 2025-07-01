@@ -5,7 +5,6 @@
     {% if form_id == 'organization-search-form' %}
         {{ super() }}
     {% else %}
-
           {% snippet 'advanced_search/advanced_search_search_form.html', type = type %}
     {% endif %}
 {% endblock search_input %}
